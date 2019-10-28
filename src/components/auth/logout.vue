@@ -1,5 +1,5 @@
 <template>
-    $END$
+    <div>Logout</div>
 </template>
 
 <script>
