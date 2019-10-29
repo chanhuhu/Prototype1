@@ -20,6 +20,11 @@ export default new Router({
       path: '/client',
       name: 'client',
       component: () => import( './views/Client.vue')
+    },
+    {
+      path: '/ListPage',
+      name: 'ListPage',
+      component: () => import( './views/ListPage.vue')
     }
   ]
 })

@@ -24,6 +24,7 @@
                         <v-row>
                             <v-col>
                                 <v-file-input
+                                    multiple
                                     accept="image/*"
                                     label="File input"
                                 ></v-file-input>
@@ -69,7 +70,7 @@
 <script>
     import NavBar from "../components/Navbar";
     import MonthlyPicker from "../components/Client/MonthlyPicker";
-    import {sync, call} from "vuex-pathify";
+    ;
     import InputDate from "../components/Client/InputDate";
 
     export default {
@@ -78,7 +79,6 @@
             NavBar, MonthlyPicker, InputDate
         }, data: () => ({
         }), computed: {
-            username: sync('receipt/email')
         }
     }
 </script>
