@@ -29,7 +29,6 @@
                                 type="submit"
                                 block
                                 color="primary"
-                                @click="login()"
                         >LOGIN
                         </v-btn>
                     </v-col>
@@ -45,14 +44,15 @@
         name: "login",
         data: () => ({
             form: {
-                email: '',
-                password: ''
+                email: "customer@gmail.com",
+                password: "123456"
             }
         }),
         methods: {
             ...mapActions('user', ['loginUser']),
             login: function () {
                 this.loginUser(this.form);
+                // this.loginUser();
             }
         },
     }
