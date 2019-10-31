@@ -8,18 +8,15 @@ const getters = {};
 
 const mutations = {
     setUser: function ({ state }, payload) {
-        console.log('payload: ',payload);
-        state.user = payload
+        Object.assign(state.user, payload)
     }
 };
 
 const actions = {
     loginUser: function ({ commit }, payload) {
-        console.log(payload);
         axios.post('http://localhost:8000/api/user/login', payload)
             .then(res => {
-                console.log(res.data);
-                commit('setUser', res.data);
+                commit('setUser', res.data.data);
             }).catch(err => {
                 console.log(err);
         })
