@@ -1,13 +1,19 @@
-import axios from 'axios';
-import _ from 'lodash';
+import Vue from 'vue';
 
 const state = {
-    receipt: []
+    receipts: {},
+    activities: {}
 };
 
 const mutations = {
+    updateReceipt: function (state, payload) {
+        Object.assign(state.receipts[payload.ReceiptId], payload.ReceiptDetails)
+    },
     addReceipt: function (state, payload) {
-
+        Vue.set(state.receipts, payload.ReceiptId, payload.ReceiptDetails)
+    },
+    addActivity: function (state, payload) {
+        Vue.set(state.activities, payload.activityId, payload.activityName)
     }
 };
 
@@ -17,8 +23,15 @@ const actions = {
             .then(res => {
                 console.log(res)
             }).catch(err => {
-                console.log(err)
-            });
+            console.log(err)
+        });
+    },
+    getActivities: function ({commit}) {
+        axios.get('http://localhost:8000/api/activity/getAll')
+            .then(res => {
+                let activities = res.data.data;
+
+            })
     }
 };
 

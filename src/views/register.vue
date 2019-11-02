@@ -70,7 +70,7 @@
         methods: {
             ...mapActions('user', ['registerUser']),
             register: function () {
-                this.registerUser(this.form)
+                this.registerUser(this.form);
             }
         }
     }

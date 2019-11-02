@@ -1,4 +1,3 @@
-import axios from 'axios';
 import Vue from 'vue'
 import router from '../router'
 
@@ -22,6 +21,7 @@ const getters = {
 const mutations = {
     setUser: function (state, payload) {
         if (!localStorage.getItem('user')) {
+            payload.status_id = 1;
             const parsed = JSON.stringify(payload);
             localStorage.setItem('user', parsed);
         } else if (null === !!localStorage.getItem('user')) {
@@ -45,6 +45,12 @@ const actions = {
         axios.post('http://localhost:8000/api/user/login', payload)
             .then(res => {
                 const userDetails = res.data.data;
+                dispatch('updateUser', {
+                    userId: userDetails.id,
+                    updates: {
+                        status_id: 1
+                    }
+                });
                 commit('setUser', userDetails);
                 if (userDetails.role_id === 1) {
                     router.push('/client')
@@ -93,23 +99,34 @@ const actions = {
                 commit('setUsers', payload);
             }).catch(err => {
             console.log(err);
-        })
+        });
     },
-    loggedIn: function ({commit}) {
-
+    getUerId: function ({commit}, payload) {
+        axios.get('http://localhost:8000/api/user/' + payload.id)
+            .then(res => {
+                let user = res.data.data;
+                console.log(user);
+            }).catch(err => {
+            console.log(err);
+        });
+    },
+    loggedIn: function ({dispatch, commit}) {
         let userDetails = JSON.parse(localStorage.getItem('user'));
         if (userDetails) {
+            dispatch('updateUser', {
+                userId: userDetails.id,
+                updates: {
+                    status_id: 1
+                }
+            });
             commit('setUser', userDetails);
             if (userDetails.role_id === 1) {
                 router.push('/client')
             } else if (userDetails.role_id === 2) {
                 router.push('/admin')
             }
-
         }
-
     }
-
 };
 
 export default {
