@@ -33,7 +33,11 @@
             </v-list>
             <template v-slot:append>
                 <div class="pa-2">
-                    <v-btn block>Logout</v-btn>
+                    <v-btn
+                            block
+                            @click="logout"
+                    >Logout
+                    </v-btn>
                 </div>
             </template>
         </v-navigation-drawer>
@@ -41,21 +45,28 @@
 </template>
 
 <script>
+    import {mapActions} from 'vuex';
+
     export default {
         name: "Navbar",
         data: () => ({
             drawer: false,
             items: [
-                { title: 'Home', icon: 'dashboard' },
-                { title: 'About', icon: 'question_answer' },
+                {title: 'Home', icon: 'dashboard'},
+                {title: 'About', icon: 'question_answer'},
             ],
         }),
         methods: {
-            async router(link){
+            async router(link) {
                 await this.$router.push(link);
             },
             /******* Methods default run ******/
-            load: async function() {}
+            load: async function () {
+            },
+            ...mapActions('user', ['logoutUser']),
+            logout: function () {
+                this.logoutUser();
+            }
         },
     }
 </script>

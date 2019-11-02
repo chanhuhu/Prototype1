@@ -52,7 +52,6 @@
             ...mapActions('user', ['loginUser']),
             login: function () {
                 this.loginUser(this.form);
-                // this.loginUser();
             }
         },
     }

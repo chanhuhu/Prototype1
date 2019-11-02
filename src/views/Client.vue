@@ -4,7 +4,7 @@
         <v-container cols="12" sm="6" md="4">
             <v-row>
                 <v-col>
-                    <v-form @submit="uploadReceipt">
+                    <v-form >
                         <v-card>
                             <v-card-title>เพิ่มใบเสร็จ</v-card-title>
                             <v-row>
@@ -49,7 +49,7 @@
                                         <template v-slot:activator="{ on }">
                                             <v-text-field
                                                     v-model="date"
-                                                     label="Picker in menu"
+                                                    label="Picker in menu"
                                                     readonly
                                                     v-on="on"
                                             ></v-text-field>
@@ -97,7 +97,7 @@
 <script>
     import NavBar from "../components/Navbar";
     import {mapActions} from "vuex";
-    import _ from 'lodash';
+
     export default {
         name: "Client",
         components: {
@@ -113,26 +113,17 @@
             menu: false,
         }),
         methods: {
+            // ...mapActions('receipt', ['uploadReceipt']),
             selectFile: function () {
                 const files = this.$refs.files.files;
-                this.files = [
+                this.form.files = [
                     ...this.files,
-                    ..._.map(files, file => ({
-                        name: file.name,
-                        size: file.size,
-                        type: file.type
-                    }))
                 ];
-                console.log(this.files);
-
+                console.log(this.form.files);
             },
-            uploadReceipt: function () {
-                axios.post('http://localhost:8000/api/upload', this.form).then(res => {
-                    console.log(res);
-                    }
-                );
-                console.log(this.form);
-            }
+            // upload: function () {
+            //     this.uploadReceipt(this.form)
+            // }
         },
         computed: {}
     }

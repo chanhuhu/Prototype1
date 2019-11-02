@@ -1,47 +1,114 @@
 import axios from 'axios';
-import _ from 'lodash';
-import { log } from 'util';
+import Vue from 'vue'
+import router from '../router'
 
 const state = {
-    user: {}
+    user: {},
+    users: {}
 };
-const getters = {};
+
+const getters = {
+    users: state => {
+        let userFiltered = {};
+        Object.keys(state.users).forEach(key => {
+            if (key !== state.user.id) {
+                userFiltered[key] = state.users[key]
+            }
+        });
+        return userFiltered
+    }
+};
 
 const mutations = {
-<<<<<<< HEAD
-    setUser: function({ state }, payload) {
-        console.log('payload: ', payload);
-        // state.user = payload
-=======
-    setUser: function ({ state }, payload) {
-        Object.assign(state.user, payload)
->>>>>>> fbb03fd1ba594dccb204fe55d3f0dbdba53d295a
+    setUser: function (state, payload) {
+        if (!localStorage.getItem('user')) {
+            const parsed = JSON.stringify(payload);
+            localStorage.setItem('user', parsed);
+        } else if (null === !!localStorage.getItem('user')) {
+            localStorage.removeItem('user');
+        }
+        state.user = payload;
+    },
+    addUser: function (state, payload) {
+        Vue.set(state.users, payload.id, payload)
+    },
+    updateUser: function (state, payload) {
+        Object.assign(state.users[payload.id], payload)
+    },
+    setUsers: function (state, payload) {
+        state.users = payload;
     }
 };
 
 const actions = {
-<<<<<<< HEAD
-    loginUser: function({ commit }, payload) {
-        console.log(payload);
-=======
-    loginUser: function ({ commit }, payload) {
->>>>>>> fbb03fd1ba594dccb204fe55d3f0dbdba53d295a
+    loginUser: function ({commit, dispatch}, payload) {
         axios.post('http://localhost:8000/api/user/login', payload)
             .then(res => {
-                commit('setUser', res.data.data);
+                const userDetails = res.data.data;
+                commit('setUser', userDetails);
+                if (userDetails.role_id === 1) {
+                    router.push('/client')
+                } else if (userDetails.role_id === 2) {
+                    router.push('/admin')
+                }
+
             }).catch(err => {
-                console.log(err);
-            })
+            console.log(err);
+        });
     },
-    registerUser: function({ commit }, payload) {
+    logoutUser: function ({commit, dispatch, state}) {
+        dispatch('updateUser', {
+            userId: state.user.id,
+            updates: {
+                status_id: 2
+            }
+        });
+        commit('setUser', {});
+        localStorage.removeItem('user');
+        router.replace('/')
+    },
+    registerUser: function ({commit}, payload) {
         axios.post('http://localhost:8000/api/user/register', payload)
             .then(res => {
-                console.log(res.data.data);
+                const userDetails = res.data.data;
+                commit('addUser', userDetails);
             }).catch(err => {
-                console.log(err);
-
-            })
+            console.log(err);
+        })
     },
+    updateUser: function ({commit}, payload) {
+        axios.put('http://localhost:8000/api/user/' + payload.userId, payload.updates)
+            .then(res => {
+                let userDetails = res.data.data;
+                commit('updateUser', userDetails);
+
+            }).catch(err => {
+            console.log(err);
+        });
+    },
+    getAllUser: function ({commit}) {
+        axios.get('http://localhost:8000/api/user/getAll')
+            .then(res => {
+                let payload = res.data.data;
+                commit('setUsers', payload);
+            }).catch(err => {
+            console.log(err);
+        })
+    },
+    loggedIn: function ({commit}) {
+
+        let userDetails = JSON.parse(localStorage.getItem('user'));
+        if (userDetails) {
+            commit('setUser', userDetails);
+            if (userDetails.role_id === 1) {
+                router.push('/client')
+            } else if (userDetails.role_id === 2) {
+                router.push('/admin')
+            }
+
+        }
+
+    }
 
 };
 
