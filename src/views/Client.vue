@@ -4,9 +4,32 @@
         <v-container cols="12" sm="6" md="4">
             <v-row>
                 <v-col>
-                    <v-form >
+                    <v-form>
                         <v-card>
                             <v-card-title>เพิ่มใบเสร็จ</v-card-title>
+                            <v-row>
+                                <v-col cols="8">
+                                    <v-text-field
+                                            label="New activity"
+                                            placeholder="ชื่อกิจกรรม"
+                                            v-model="newActivity"
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="4">
+                                    <v-btn
+                                            @click="clickToCreateActivity"
+                                    >Create
+                                    </v-btn>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <VSelect
+                                            label="Existing activities"
+                                            :items="[1,2]"
+                                    ></VSelect>
+                                </v-col>
+                            </v-row>
                             <v-row>
                                 <v-col>
                                     <v-text-field
@@ -96,7 +119,7 @@
 
 <script>
     import NavBar from "../components/Navbar";
-    import {mapActions} from "vuex";
+    import {mapActions, mapState} from "vuex";
 
     export default {
         name: "Client",
@@ -109,11 +132,12 @@
                 cost: '',
                 files: []
             },
+            newActivity: '',
             date: new Date().toISOString().substr(0, 7),
             menu: false,
         }),
         methods: {
-            // ...mapActions('receipt', ['uploadReceipt']),
+            ...mapActions('receipt', ['createActivity']),
             selectFile: function () {
                 const files = this.$refs.files.files;
                 this.form.files = [
@@ -121,11 +145,16 @@
                 ];
                 console.log(this.form.files);
             },
-            // upload: function () {
-            //     this.uploadReceipt(this.form)
-            // }
+            clickToCreateActivity: function () {
+                this.createActivity({
+                    name: this.newActivity,
+                    user_id: this.user.id
+                })
+            }
         },
-        computed: {}
+        computed: {
+            ...mapState('user', ['user']),
+        },
     }
 </script>
 

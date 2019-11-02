@@ -86,8 +86,8 @@ const actions = {
         axios.put('http://localhost:8000/api/user/' + payload.userId, payload.updates)
             .then(res => {
                 let userDetails = res.data.data;
-                commit('updateUser', userDetails);
-
+                // console.log(userDetails);
+                // commit('updateUser', userDetails);
             }).catch(err => {
             console.log(err);
         });

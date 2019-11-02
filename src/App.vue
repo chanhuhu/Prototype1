@@ -12,10 +12,12 @@
     export default {
         name: 'App',
         methods: {
-            ...mapActions('user', ['loggedIn'])
+            ...mapActions('user', ['loggedIn']),
+            // ...mapActions('receipt', ['createActivity'])
         },
         mounted() {
             this.loggedIn();
+            // this.createActivity();
         },
     };
 </script>
