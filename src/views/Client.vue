@@ -1,22 +1,23 @@
 <template>
     <div class="container--fluid">
         <NavBar/>
-        <v-container cols="12" sm="6" md="4">
+        <v-container>
             <v-row>
                 <v-col>
-                    <v-form>
+                    <v-form @submit="clickToCreateReceipt">
                         <v-card>
                             <v-card-title>เพิ่มใบเสร็จ</v-card-title>
                             <v-row>
-                                <v-col cols="8">
+                                <v-col xs6 md3 cols="10">
                                     <v-text-field
                                             label="New activity"
                                             placeholder="ชื่อกิจกรรม"
                                             v-model="newActivity"
                                     ></v-text-field>
                                 </v-col>
-                                <v-col cols="4">
+                                <v-col xs6 md3>
                                     <v-btn
+                                            rounded
                                             @click="clickToCreateActivity"
                                     >Create
                                     </v-btn>
@@ -24,10 +25,13 @@
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <VSelect
+                                    <v-select
+                                            @change="selectActivity"
+                                            :items="this.activities"
+                                            item-value="id"
+                                            item-text="name"
                                             label="Existing activities"
-                                            :items="[1,2]"
-                                    ></VSelect>
+                                    ></v-select>
                                 </v-col>
                             </v-row>
                             <v-row>
@@ -35,7 +39,7 @@
                                     <v-text-field
                                             label="Remark"
                                             placeholder="หมายเหตุ"
-                                            v-model="form.remark"
+                                            v-model="remark"
                                     ></v-text-field>
                                 </v-col>
                             </v-row>
@@ -44,7 +48,7 @@
                                     <v-text-field
                                             label="Cost"
                                             placeholder="จำนวนเงินทั้งหมด"
-                                            v-model="form.cost"
+                                            v-model="cost"
                                     ></v-text-field>
                                 </v-col>
                             </v-row>
@@ -55,7 +59,36 @@
                                             ref="files"
                                             multiple
                                             @change="selectFile"
+                                            accept="image/*"
                                     />
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <div>
+                                        <v-list
+                                                rounded
+                                                disabled>
+                                            <v-list-item-group>
+                                                <v-list-item
+                                                        v-for="(file, index) in files"
+                                                        :key="index"
+                                                >
+                                                    <v-list-item-content>
+                                                        <v-list-item-title v-text="file.name"></v-list-item-title>
+                                                    </v-list-item-content>
+                                                    <v-list-item-icon>
+                                                        <v-icon
+                                                                @click.prevent="files.slice(index, 1)"
+                                                                style="cursor: pointer"
+                                                                mdi-close
+                                                        >close
+                                                        </v-icon>
+                                                    </v-list-item-icon>
+                                                </v-list-item>
+                                            </v-list-item-group>
+                                        </v-list>
+                                    </div>
                                 </v-col>
                             </v-row>
                             <v-row>
@@ -119,7 +152,8 @@
 
 <script>
     import NavBar from "../components/Navbar";
-    import {mapActions, mapState} from "vuex";
+    import {mapActions, mapState, mapGetters} from "vuex";
+    import _ from 'lodash';
 
     export default {
         name: "Client",
@@ -127,34 +161,52 @@
             NavBar,
         },
         data: () => ({
-            form: {
-                remark: '',
-                cost: '',
-                files: []
-            },
+            remark: '',
+            cost: '',
+            files: [],
             newActivity: '',
             date: new Date().toISOString().substr(0, 7),
             menu: false,
+            activity_id: '',
+            form: new FormData
         }),
         methods: {
-            ...mapActions('receipt', ['createActivity']),
+            ...mapActions('receipt', ['createActivity', 'sendReceipt', 'getUserActivities']),
             selectFile: function () {
                 const files = this.$refs.files.files;
-                this.form.files = [
-                    ...this.files,
-                ];
-                console.log(this.form.files);
+                this.files = [...files];
+            },
+            selectActivity: function (e) {
+                this.activity_id = e;
             },
             clickToCreateActivity: function () {
                 this.createActivity({
                     name: this.newActivity,
                     user_id: this.user.id
                 })
-            }
+            },
+            clickToCreateReceipt: function () {
+                this.form = new FormData;
+                this.form.append('cost', this.cost);
+                this.form.append('date', this.date);
+                this.form.append('activity_id', this.activity_id);
+                this.form.append('remark', this.remark);
+
+                for (let i = 0; i < this.files.length; i++) {
+                    this.form.append('file_name[]', this.files[i]);
+                }
+                this.sendReceipt(this.form);
+            },
         },
         computed: {
+            ...mapGetters('receipt', ['activities']),
             ...mapState('user', ['user']),
         },
+        mounted() {
+            this.getUserActivities({
+                userId: this.user.id
+            })
+        }
     }
 </script>
 

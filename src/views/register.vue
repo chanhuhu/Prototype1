@@ -1,10 +1,5 @@
 <template>
-
-
     <v-layout class="bg" row wrap style="height:200vh; widgth:300vw;">
-        <v-card>
-
-        </v-card>
         <div class="container">
             <v-card class=" ma-10 mx-10 mb-10 pa-10 px-10 ">
                 <v-form @submit="register">

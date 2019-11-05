@@ -9,6 +9,9 @@ const state = {
 const getters = {
     users: state => {
         let userFiltered = {};
+        if (null === !!state.activities) {
+            return
+        }
         Object.keys(state.users).forEach(key => {
             if (key !== state.user.id) {
                 userFiltered[key] = state.users[key]
@@ -102,7 +105,7 @@ const actions = {
         });
     },
     getUerId: function ({commit}, payload) {
-        axios.get('http://localhost:8000/api/user/' + payload.id)
+        axios.get('http://localhost:8000/api/user/' + payload.userId)
             .then(res => {
                 let user = res.data.data;
                 console.log(user);

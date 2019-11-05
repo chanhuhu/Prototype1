@@ -7,32 +7,36 @@ const state = {
 
 const mutations = {
     updateReceipt: function (state, payload) {
-        Object.assign(state.receipts[payload.ReceiptId], payload.ReceiptName)
+        Object.assign(state.receipts[payload.ReceiptId], payload.ReceiptName);
     },
     addReceipt: function (state, payload) {
-        Vue.set(state.receipts, payload.ReceiptId, payload.ReceiptName)
+        Vue.set(state.receipts, payload.ReceiptId, payload.ReceiptName);
+    },
+    setActivities: function (state, payload) {
+        state.activities = payload;
     },
     addActivity: function (state, payload) {
-        Vue.set(state.activities, payload.ActivityId, payload.ActivityName)
-        console.log(state.activities)
+        Vue.set(state.activities, payload.id, payload);
     }
 };
 
 const actions = {
-    uploadReceipt: function ({commit}, payload) {
-        axios.post('http://localhost:8000/api/upload', payload)
+    sendReceipt: async function ({commit}, payload) {
+        // for (let pair of payload.entries()) {
+        //     console.log(pair[0]+ ', ' + pair[1]);
+        // }
+        await axios.post('http://localhost:8000/api/receipt/upload', payload)
             .then(res => {
-                console.log(res)
-            }).catch(err => {
-            console.log(err)
-        });
+                console.log(res.data.data)
+            }).catch(err => console.log(err));
     },
-    getActivities: function ({commit}) {
-        axios.get('http://localhost:8000/api/activity/getAll')
+    getUserActivities: function ({commit}, payload) {
+        axios.get('http://localhost:8000/api/activity/user/' + payload.userId)
             .then(res => {
                 let activities = res.data.data;
-
-            })
+                console.log(activities);
+                // commit('setActivities', activities);
+            }).catch(err => console.log(err));
     },
     updateReceipt: function ({commit}, payload) {
         // put receipt's status_id
@@ -42,16 +46,23 @@ const actions = {
             .then(res => {
                 let activityDetails = res.data.data;
                 commit('addActivity', {
-                    ActivityId: activityDetails.id,
-                    ActivityName: activityDetails.name
+                    id: activityDetails.id,
+                    name: activityDetails.name
                 });
-            }).catch(err => {
-                console.log(err)
-        })
+            }).catch(err => console.log(err));
     }
 };
 
-const getters = {};
+const getters = {
+    activities: state => {
+        let activities_name = [];
+        Object.keys(state.activities).forEach(key => {
+            activities_name[key] = state.activities[key]
+            console.log(activities_name[key])
+        });
+        return activities_name
+    }
+};
 
 export default {
     namespaced: true,

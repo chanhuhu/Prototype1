@@ -13,33 +13,16 @@
                 temporary
                 right
         >
-            <v-list>
-                <v-list-item link>
-                    <v-list-item-icon>
-                        <v-icon>event</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                        <v-list-item-title>Client</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-                <v-list-item link>
-                    <v-list-item-icon>
-                        <v-icon>gavel</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                        <v-list-item-title>Admin</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-            </v-list>
-            <template v-slot:append>
-                <div class="pa-2">
+            <div class="flex-column">
+                <v-spacer></v-spacer>
+                <div class="pa-2 column col justify-end">
                     <v-btn
                             block
                             @click="logout"
                     >Logout
                     </v-btn>
                 </div>
-            </template>
+            </div>
         </v-navigation-drawer>
     </nav>
 </template>
