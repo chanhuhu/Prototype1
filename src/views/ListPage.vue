@@ -34,7 +34,7 @@
         },
         mounted() {
             this.getReceipts();
-        }
+        },
     }
 </script>
 

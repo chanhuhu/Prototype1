@@ -43,8 +43,8 @@
         },
         computed: {
             receiptDetails: function () {
-                if (this.$store.state.receipt.receipts[this.$route.params.receipt_id]) {
-                    return this.$store.state.receipt.receipts[this.$route.params.receipt_id]
+                if (this.$store.state.receipt.receipts[this.$route.params.receipt_id-1]) {
+                    return this.$store.state.receipt.receipts[this.$route.params.receipt_id-1]
                 }
                 return {}
             },
@@ -52,25 +52,8 @@
         },
         mounted() {
             this.getImages({receipt_id: this.$route.params.receipt_id});
-            // console.log(this.$store.state.receipt.receipts[this.$route.params.receipt_id]);
-        },
-        data () {
-            return {
-                items: [
-                    {
-                        src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
-                    },
-                    {
-                        src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-                    },
-                    {
-                        src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-                    },
-                    {
-                        src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
-                    },
-                ],
-            }
+            console.log(this.$route.params.receipt_id);
+            console.log(this.$store.state.receipt.receipts[this.$route.params.receipt_id-1]);
         },
     }
 
