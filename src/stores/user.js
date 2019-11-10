@@ -4,23 +4,20 @@ import _ from 'lodash';
 
 const state = {
     user: {},
-    users: {}
+    users: {},
+    roles: {}
 };
 
 const getters = {
-    users: state => {
-        let userFiltered = {};
-        if (null === !!state.activities) {
-            //
-        } else {
-            Object.keys(state.users).forEach(key => {
-                if (key !== state.user.id) {
-                    userFiltered[key] = state.users[key]
-                }
-            });
-            return userFiltered
-        }
-    }
+    roles: state => {
+        let rolesFilter = [];
+        Object.keys(state.roles).forEach(key => {
+            if (key !== state.roles.id) {
+                rolesFilter[key] = state.roles[key];
+            }
+        });
+        return rolesFilter;
+    },
 };
 
 const mutations = {
@@ -35,13 +32,16 @@ const mutations = {
         state.user = payload;
     },
     addUser: function (state, payload) {
-        Vue.set(state.users, payload.id, payload)
+        Vue.set(state.users, payload.id, payload);
     },
     updateUser: function (state, payload) {
-        Object.assign(state.users[payload.id], payload)
+        Object.assign(state.users[payload.id], payload);
     },
     setUsers: function (state, payload) {
         state.users = payload;
+    },
+    setRoles: function (state, payload) {
+        state.roles = payload;
     }
 };
 
@@ -131,6 +131,15 @@ const actions = {
                 router.push('/receipt')
             }
         }
+    },
+    getRole: function ({commit}) {
+        axios.get('http://localhost:8000/api/role/getAll')
+            .then(res => { 
+                let roles = res.data.data;
+                commit('setRoles', roles);
+            }).catch(err => {
+                console.log(err)
+            });
     }
 };
 
