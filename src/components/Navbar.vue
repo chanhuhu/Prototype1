@@ -1,20 +1,22 @@
 <template>
     <nav>
-        <v-app-bar>
+        <v-app-bar color="#EE6262">
             <v-btn
                     v-if="$route.fullPath.includes('/receipt/')"
                     @click="$router.go(-1)"
-                    icon>
+                    icon
+            >
                 <v-icon
                         dense
                 >mdi-arrow-left
                 </v-icon>
             </v-btn>
             <v-toolbar-title class="grey--text">
-                <div>PROTOTYPE</div>
+                <div style="color: white">PROTOTYPE</div>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn
+                    class="bg-white"
                     text
                     v-ripple
                     @click="logout"
@@ -69,5 +71,9 @@
 
     .logout {
         font-family: Arial, sans-serif;
+    }
+
+    .bg-white {
+        color: white;
     }
 </style>
