@@ -1,5 +1,6 @@
-import Vue from 'vue'
-import router from '../router'
+import Vue from 'vue';
+import router from '../router';
+import _ from 'lodash';
 
 const state = {
     user: {},
@@ -10,14 +11,15 @@ const getters = {
     users: state => {
         let userFiltered = {};
         if (null === !!state.activities) {
-            return
+            //
+        } else {
+            Object.keys(state.users).forEach(key => {
+                if (key !== state.user.id) {
+                    userFiltered[key] = state.users[key]
+                }
+            });
+            return userFiltered
         }
-        Object.keys(state.users).forEach(key => {
-            if (key !== state.user.id) {
-                userFiltered[key] = state.users[key]
-            }
-        });
-        return userFiltered
     }
 };
 
@@ -46,38 +48,38 @@ const mutations = {
 const actions = {
     loginUser: function ({commit, dispatch}, payload) {
         axios.post('http://localhost:8000/api/user/login', payload)
-            .then(res => {
+            .then(async res => {
                 const userDetails = res.data.data;
-                dispatch('updateUser', {
-                    userId: userDetails.id,
+                await dispatch('updateUser', {
+                    user_id: userDetails.id,
                     updates: {
                         status_id: 1
                     }
                 });
-                commit('setUser', userDetails);
+                await commit('setUser', userDetails);
                 if (userDetails.role_id === 1) {
-                    router.push('/client')
+                    await router.push('/client')
                 } else if (userDetails.role_id === 2) {
-                    router.push('/admin')
+                    await router.push('/receipt')
                 }
 
             }).catch(err => {
             console.log(err);
         });
     },
-    logoutUser: function ({commit, dispatch, state}) {
-        dispatch('updateUser', {
-            userId: state.user.id,
+    logoutUser: async function ({commit, dispatch, state}) {
+        await dispatch('updateUser', {
+            user_id: state.user.id,
             updates: {
                 status_id: 2
             }
         });
-        commit('setUser', {});
-        localStorage.removeItem('user');
-        router.replace('/')
+        await commit('setUser', {});
+        await localStorage.removeItem('user');
+        await router.replace('/')
     },
-    registerUser: function ({commit}, payload) {
-        axios.post('http://localhost:8000/api/user/register', payload)
+    registerUser: async function ({commit}, payload) {
+        await axios.post('http://localhost:8000/api/user/register', payload)
             .then(res => {
                 const userDetails = res.data.data;
                 commit('addUser', userDetails);
@@ -86,7 +88,7 @@ const actions = {
         })
     },
     updateUser: function ({commit}, payload) {
-        axios.put('http://localhost:8000/api/user/' + payload.userId, payload.updates)
+        axios.put('http://localhost:8000/api/user/' + payload.user_id, payload.updates)
             .then(res => {
                 let userDetails = res.data.data;
                 // console.log(userDetails);
@@ -105,7 +107,7 @@ const actions = {
         });
     },
     getUerId: function ({commit}, payload) {
-        axios.get('http://localhost:8000/api/user/' + payload.userId)
+        axios.get('http://localhost:8000/api/user/' + payload.user_id)
             .then(res => {
                 let user = res.data.data;
                 console.log(user);
@@ -117,7 +119,7 @@ const actions = {
         let userDetails = JSON.parse(localStorage.getItem('user'));
         if (userDetails) {
             dispatch('updateUser', {
-                userId: userDetails.id,
+                user_id: userDetails.id,
                 updates: {
                     status_id: 1
                 }
@@ -126,7 +128,7 @@ const actions = {
             if (userDetails.role_id === 1) {
                 router.push('/client')
             } else if (userDetails.role_id === 2) {
-                router.push('/admin')
+                router.push('/receipt')
             }
         }
     }

@@ -11,8 +11,7 @@ export default new Router({
             component: Home
         },
         {
-            path: '/admin',
-            name: 'admin',
+            path: '/receipt/:receipt_id',
             component: () =>
                 import ('./views/Admin.vue')
         },
@@ -27,6 +26,12 @@ export default new Router({
             name: 'register',
             component: () =>
                 import ('./views/register.vue')
+        },
+        {
+            path: '/receipt',
+            name: 'receipt',
+            component: () =>
+                import ('./views/ListPage.vue')
         },
     ]
 })

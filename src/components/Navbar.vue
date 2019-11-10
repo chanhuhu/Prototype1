@@ -1,34 +1,37 @@
 <template>
     <nav>
-        <v-toolbar>
+        <v-app-bar>
+            <v-btn
+                    v-if="$route.fullPath.includes('/receipt/')"
+                    @click="$router.go(-1)"
+                    icon>
+                <v-icon
+                        dense
+                >mdi-arrow-left
+                </v-icon>
+            </v-btn>
             <v-toolbar-title class="grey--text">
-                <div style="cursor:pointer" @click="router('/')">PROTOTYPE</div>
+                <div>PROTOTYPE</div>
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-        </v-toolbar>
-        <v-navigation-drawer
-                v-model="drawer"
-                absolute
-                temporary
-                right
-        >
-            <div class="flex-column">
-                <v-spacer></v-spacer>
-                <div class="pa-2 column col justify-end">
-                    <v-btn
-                            block
-                            @click="logout"
-                    >Logout
-                    </v-btn>
+            <v-btn
+                    text
+                    v-ripple
+                    @click="logout"
+                    dense
+            >
+                <v-icon class="mx-2">mdi-account-circle</v-icon>
+                <div class="logout">
+                    Logout<br/>{{this.user.first + ' ' + this.user.last}}
                 </div>
-            </div>
-        </v-navigation-drawer>
+            </v-btn>
+        </v-app-bar>
     </nav>
 </template>
 
 <script>
     import {mapActions} from 'vuex';
+    import {mapState} from 'vuex';
 
     export default {
         name: "Navbar",
@@ -51,6 +54,9 @@
                 this.logoutUser();
             }
         },
+        computed: {
+            ...mapState('user', ['user']),
+        },
     }
 </script>
 
@@ -59,5 +65,9 @@
         padding: 0;
         margin: 0;
         box-sizing: border-box;
+    }
+
+    .logout {
+        font-family: Arial, sans-serif;
     }
 </style>

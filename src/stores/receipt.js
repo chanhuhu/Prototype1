@@ -2,65 +2,100 @@ import Vue from 'vue';
 
 const state = {
     receipts: {},
-    activities: {}
+    activities: {},
+    images: {}
 };
 
 const mutations = {
-    updateReceipt: function (state, payload) {
-        Object.assign(state.receipts[payload.ReceiptId], payload.ReceiptName);
-    },
-    addReceipt: function (state, payload) {
-        Vue.set(state.receipts, payload.ReceiptId, payload.ReceiptName);
+    setReceipts: function (state, payload) {
+        state.receipts = payload;
     },
     setActivities: function (state, payload) {
         state.activities = payload;
     },
-    addActivity: function (state, payload) {
-        Vue.set(state.activities, payload.id, payload);
-    }
+    setImages: function (state, payload) {
+        state.images = payload;
+    },
 };
 
 const actions = {
     sendReceipt: async function ({commit}, payload) {
-        // for (let pair of payload.entries()) {
-        //     console.log(pair[0]+ ', ' + pair[1]);
-        // }
         await axios.post('http://localhost:8000/api/receipt/upload', payload)
             .then(res => {
                 console.log(res.data.data)
             }).catch(err => console.log(err));
     },
-    getUserActivities: function ({commit}, payload) {
-        axios.get('http://localhost:8000/api/activity/user/' + payload.userId)
+    getActivities: function ({commit}) {
+        axios.get('http://localhost:8000/api/activity/getAll')
             .then(res => {
                 let activities = res.data.data;
-                console.log(activities);
-                // commit('setActivities', activities);
+                commit('setActivities', activities);
             }).catch(err => console.log(err));
     },
-    updateReceipt: function ({commit}, payload) {
-        // put receipt's status_id
-    },
-    createActivity: function ({commit}, payload) {
-        axios.post('http://localhost:8000/api/activity/create', payload)
+    getReceipt: function ({commit}, payload) {
+        axios.get('http://localhost:8000/api/receipt/user/' + payload.user_id)
             .then(res => {
-                let activityDetails = res.data.data;
-                commit('addActivity', {
-                    id: activityDetails.id,
-                    name: activityDetails.name
-                });
+                let receiptDetails = res.data.data;
+                commit('setReceipt', receiptDetails);
             }).catch(err => console.log(err));
+    },
+    getReceipts: function ({commit}) {
+        axios.get('http://localhost:8000/api/activity/receipt/getAll')
+            .then(res => {
+                let receiptAndActivityDetails = res.data.data;
+                commit('setReceipts', receiptAndActivityDetails);
+            }).catch(err => console.log(err));
+    },
+    getImages: function ({commit}, payload) {
+        axios.get('http://localhost:8000/api/image/receipt/' + payload.receipt_id)
+            .then(res => {
+                let imageDetails = res.data.data;
+                commit('setImages', imageDetails);
+            }).catch(err => console.log(err));
+    },
+    getUserActivities: function ({commit}, payload) {
+        axios.get('http://localhost:8000/api/activity/user/' + payload.user_id)
+            .then(res => {
+                let activities = res.data.data;
+                commit('setActivities', activities);
+            }).catch(err => console.log(err));
+    },
+    createActivity: async function ({commit}, payload) {
+        await axios.post('http://localhost:8000/api/activity/create', payload)
+            .then(async (res) => {
+                let activityDetails = res.data.data;
+            }).catch(err => console.log(err));
+
     }
 };
 
 const getters = {
     activities: state => {
-        let activities_name = [];
+        let activitiesFilter = [];
         Object.keys(state.activities).forEach(key => {
-            activities_name[key] = state.activities[key]
-            console.log(activities_name[key])
+            if (key !== state.activities.id) {
+                activitiesFilter[key] = state.activities[key];
+            }
         });
-        return activities_name
+        return activitiesFilter;
+    },
+    receipts: state => {
+        let receiptsFilter = [];
+        Object.keys(state.receipts).forEach(key => {
+            if (key !== state.receipts.id) {
+                receiptsFilter[key] = state.receipts[key];
+            }
+        });
+        return receiptsFilter;
+    },
+    images: state => {
+        let imagesFilter = [];
+        Object.keys(state.images).forEach(key => {
+            if (key !== state.images.id) {
+                imagesFilter[key] = state.images[key];
+            }
+        });
+        return imagesFilter;
     }
 };
 

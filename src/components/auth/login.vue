@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container--fluid">
         <v-form @submit="login">
             <v-card>
                 <v-card-title>ลงชื่อเข้าใช้</v-card-title>
