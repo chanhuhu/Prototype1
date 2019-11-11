@@ -1,10 +1,24 @@
 <template>
     <nav>
-        <v-app-bar app color="#EE6262">
+        <v-app-bar
+                color="#EE6262">
             <v-btn
                     v-if="$route.fullPath.includes('/receipt/')"
                     @click="$router.go(-1)"
                     icon
+                    color="white"
+
+            >
+                <v-icon
+                        dense
+                >mdi-arrow-left
+                </v-icon>
+            </v-btn>
+            <v-btn
+                    v-if="$route.fullPath.includes('/register')"
+                    to="/receipt"
+                    icon
+                    color="white"
             >
                 <v-icon
                         dense

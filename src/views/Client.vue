@@ -1,16 +1,18 @@
 <template>
     <div class="container--fluid">
         <NavBar/>
-        <v-content style="background-color: #4F3F3F;">
+        <v-content>
             <v-card
                     v-if="isDashBoard"
                     class="rounded-card"
             >
+                <v-row>
+                    <v-card-title>เพิ่มกิจกรรม</v-card-title>
+                </v-row>
                 <v-form
                         class="pt-1"
                         @submit.prevent="clickToCreateReceipt"
                 >
-                    <v-card-title>เพิ่มใบเสร็จ</v-card-title>
                     <v-row class="pa-0">
                         <v-col xs6 md3 cols="12">
                             <v-text-field
@@ -29,22 +31,61 @@
                         </v-col>
                     </v-row>
                     <v-row>
+                        <v-divider></v-divider>
+                    </v-row>
+                    <v-row>
+                        <v-card-title>เพิ่มใบเสร็จ</v-card-title>
+                    </v-row>
+                    <v-row>
                         <v-col>
                             <v-select
                                     @change="selectActivity"
                                     :items="this.activities"
                                     item-value="id"
-                                    item-text="name"
+                                    item-text="activity"
                                     placeholder="รายชื่อกิจกรรมที่มีอยู่"
                             ></v-select>
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col>
-                            <v-text-field
-                                    placeholder="หมายเหตุ"
-                                    v-model="remark"
-                            ></v-text-field>
+                            <v-menu
+                                    ref="menu"
+                                    v-model="menu"
+                                    :close-on-content-click="false"
+                                    :return-value.sync="date"
+                                    transition="scale-transition"
+                                    offset-y
+                                    min-width="290px"
+                            >
+                                <template v-slot:activator="{ on }">
+                                    <v-text-field
+                                            v-model="date"
+                                            label="เลิอกเดิอนที่ต้องการขอเบิก"
+                                            readonly
+                                            v-on="on"
+                                    ></v-text-field>
+                                </template>
+                                <v-date-picker
+                                        v-model="date"
+                                        type="month"
+                                        no-title
+                                        scrollable>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                            text
+                                            color="primary"
+                                            @click="menu = false"
+                                    >Cancel
+                                    </v-btn>
+                                    <v-btn
+                                            text
+                                            color="primary"
+                                            @click="$refs.menu.save(date)"
+                                    >OK
+                                    </v-btn>
+                                </v-date-picker>
+                            </v-menu>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -91,43 +132,10 @@
                     </v-row>
                     <v-row>
                         <v-col>
-                            <v-menu
-                                    ref="menu"
-                                    v-model="menu"
-                                    :close-on-content-click="false"
-                                    :return-value.sync="date"
-                                    transition="scale-transition"
-                                    offset-y
-                                    min-width="290px"
-                            >
-                                <template v-slot:activator="{ on }">
-                                    <v-text-field
-                                            v-model="date"
-                                            label="Picker in menu"
-                                            readonly
-                                            v-on="on"
-                                    ></v-text-field>
-                                </template>
-                                <v-date-picker
-                                        v-model="date"
-                                        type="month"
-                                        no-title
-                                        scrollable>
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                            text
-                                            color="primary"
-                                            @click="menu = false"
-                                    >Cancel
-                                    </v-btn>
-                                    <v-btn
-                                            text
-                                            color="primary"
-                                            @click="$refs.menu.save(date)"
-                                    >OK
-                                    </v-btn>
-                                </v-date-picker>
-                            </v-menu>
+                            <v-text-field
+                                    placeholder="หมายเหตุ"
+                                    v-model="remark"
+                            ></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -143,11 +151,18 @@
                     </v-row>
                 </v-form>
             </v-card>
+            <div
+                    class="d-flex column col justify-center align-center"
+                    v-else
+            >
+                <v-spacer></v-spacer>
+                <v-data-table dense :headers="headers" :items="receipt" item-key="id"
+                              class="elevation-1"></v-data-table>
+            </div>
         </v-content>
         <v-footer
-                app
                 padless
-                fixed>
+                app>
             <v-toolbar color="#EE6262">
                 <div class="d-flex row justify-space-around">
                     <v-btn
@@ -188,10 +203,23 @@
             menu: false,
             activity_id: '',
             form: new FormData,
-            isDashBoard: false
+            isDashBoard: false,
+            alert: true,
+            headers: [
+                {
+                    text: 'Invoice#',
+                    align: 'left',
+                    sortable: false,
+                    value: 'id',
+                },
+                {text: 'ชื่อกิจกรรม', value: 'activity'},
+                {text: 'จำนวนเงิน', value: 'cost'},
+                {text: 'เดือนที่ขอเบิก', value: 'date'},
+                {text: 'สถานะ', value: 'name'},
+            ],
         }),
         methods: {
-            ...mapActions('receipt', ['createActivity', 'sendReceipt', 'getUserActivities']),
+            ...mapActions('receipt', ['createActivity', 'sendReceipt', 'getUserActivities', 'getReceipt']),
             selectFile: function () {
                 const files = this.$refs.files.files;
                 this.files = [...files];
@@ -210,7 +238,7 @@
                 this.newActivity = '';
 
             },
-            clickToCreateReceipt: function () {
+            clickToCreateReceipt: async function () {
                 this.form = new FormData;
                 this.form.append('cost', this.cost);
                 this.form.append('date', this.date);
@@ -220,17 +248,27 @@
                 for (let i = 0; i < this.files.length; i++) {
                     this.form.append('file_name[]', this.files[i]);
                 }
-                this.sendReceipt(this.form);
+                await this.sendReceipt(this.form);
+                this.remark = '';
+                this.cost = '';
+                this.files = [];
+                this.isDashBoard = false
+                await this.getReceipt({
+                    user_id: this.user.id
+                });
             },
         },
         computed: {
-            ...mapGetters('receipt', ['activities']),
+            ...mapGetters('receipt', ['activities', 'receipt']),
             ...mapState('user', ['user']),
         },
         mounted() {
             this.getUserActivities({
                 user_id: this.user.id
-            })
+            });
+            this.getReceipt({
+                user_id: this.user.id
+            });
         }
     }
 </script>

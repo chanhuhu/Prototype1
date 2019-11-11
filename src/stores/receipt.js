@@ -16,6 +16,9 @@ const mutations = {
             Vue.set(state.receipts, res.id, res)
         });
     },
+    setReceipt: function (state, payload) {
+      state.receipt = payload;
+    },
     deleteReceipt: function (state, payload) {
         Vue.delete(state.receipts, payload.receipt_id);
     },
@@ -58,12 +61,11 @@ const actions = {
                 commit('setReceipt', receiptDetails);
             }).catch(err => console.log(err));
     },
-    getReceipts: function ({commit}) {
+    getReceipts: function ({commit}, payload) {
         axios.get('http://localhost:8000/api/activity/receipt/getAll')
             .then(res => {
-                let receiptAndActivityDetails = res.data.data;
-                console.log(receiptAndActivityDetails)
-                commit('setReceipts', receiptAndActivityDetails);
+                let receiptActivityDetails = res.data.data;
+                commit('setReceipts', receiptActivityDetails);
             }).catch(err => console.log(err));
     },
     getImages: function ({commit}, payload) {
@@ -104,6 +106,15 @@ const getters = {
         Object.keys(state.receipts).forEach(key => {
             if (key !== state.receipts.id) {
                 receiptsFilter[key] = state.receipts[key];
+            }
+        });
+        return receiptsFilter;
+    },
+    receipt: state => {
+        let receiptsFilter = [];
+        Object.keys(state.receipt).forEach(key => {
+            if (key !== state.receipt.id) {
+                receiptsFilter[key] = state.receipt[key];
             }
         });
         return receiptsFilter;

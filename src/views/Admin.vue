@@ -1,26 +1,28 @@
 <template>
     <div class="container--fluid">
         <navbar/>
-        <v-card>
-            <v-card-title>{{receiptDetails.activity.name}}</v-card-title>
-            <v-carousel>
-                <v-carousel-item
-                        v-for="(image,index) in images"
-                        :key="index"
-                        :src="image.file_name"
-                ></v-carousel-item>
-            </v-carousel>
-            <pre>{{receiptDetails}}</pre>
-            <v-container>
-                <v-row>
-                    <v-text-field
-                            label="สำหรับกรอกเพื่อตรวจสอบยอดเงินในรูปว่าตรงกับยอดที่พนักงานกรอกไหม"></v-text-field>
-                    <v-btn @click="clickToUpdateReceiptStatus(9)">อนุมัติ</v-btn>
-                    <v-btn @click="clickToUpdateReceiptStatus(10)">ไม่อนุมัติ</v-btn>
-                    <v-btn>ตรวจสอบยอดเงิน</v-btn>
-                </v-row>
-            </v-container>
-        </v-card>
+        <v-content>
+            <v-card>
+                <v-card-title>{{receiptDetails.activity.name}}</v-card-title>
+                <v-carousel>
+                    <v-carousel-item
+                            v-for="(image,index) in images"
+                            :key="index"
+                            :src="image.file_name"
+                    ></v-carousel-item>
+                </v-carousel>
+                <pre>{{receiptDetails}}</pre>
+                <v-container>
+                    <v-row>
+                        <v-text-field
+                                label="สำหรับกรอกเพื่อตรวจสอบยอดเงินในรูปว่าตรงกับยอดที่พนักงานกรอกไหม"></v-text-field>
+                        <v-btn @click="clickToUpdateReceiptStatus(9)">อนุมัติ</v-btn>
+                        <v-btn @click="clickToUpdateReceiptStatus(10)">ไม่อนุมัติ</v-btn>
+                        <v-btn>ตรวจสอบยอดเงิน</v-btn>
+                    </v-row>
+                </v-container>
+            </v-card>
+        </v-content>
     </div>
 </template>
 
