@@ -2,38 +2,44 @@
     <div class="container--fluid">
         <navbar/>
         <v-content>
-            <div v-if="!isDashBoard">
-                <v-list-item
-                        v-for="receipt in receipts"
-                        style="cursor: pointer;"
-                        v-ripple
-                        :to="'/receipt/'+receipt.id"
-
-                >
-                    <v-list-item-content>
-                        <div class="text-center white pa-12">
-                            {{receipt.cost}} {{receipt.date}} {{receipt.activity.name}}
-                        </div>
-                    </v-list-item-content>
-                </v-list-item>
-            </div>
-            <v-card v-else>
-                <BarChart/>
+            <v-card tile>
+                <v-card-title class="headline">ใบเสร็จที่รอการตรวจสอบ</v-card-title>
+                <v-list two-line>
+                    <v-list-item-group
+                            active-class="pink--text"
+                    >
+                        <template v-for="receipt in receipts">
+                            <v-list-item :key="receipt.id" :to="'/receipt/'+receipt.id">
+                                <template v-slot:default="{ active, toggle }">
+                                    <v-list-item-content>
+                                        <v-row>
+                                            <v-col>
+                                                <v-list-item-title
+                                                        v-text="receipt.activity.activity"
+                                                ></v-list-item-title>
+                                            </v-col>
+                                            <v-col>
+                                                <v-list-item-subtitle
+                                                        v-text="receipt.date"
+                                                ></v-list-item-subtitle>
+                                            </v-col>
+                                        </v-row>
+                                        <v-list-item-subtitle
+                                                v-text="receipt.created_at"></v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </template>
+                            </v-list-item>
+                        </template>
+                    </v-list-item-group>
+                </v-list>
             </v-card>
         </v-content>
         <v-footer
-                app
+                absolute
                 padless
-                fixed
         >
             <v-toolbar color="#EE6262">
                 <div class="d-flex row justify-space-around">
-                    <v-btn @click="isDashBoard = true" text color="white">
-                        DashBoard
-                    </v-btn>
-                    <v-btn @click="isDashBoard = false" text color="white">
-                        List Invoice
-                    </v-btn>
                     <v-btn to="/register" text color="white">
                         Sign Up
                     </v-btn>
@@ -51,13 +57,13 @@
     export default {
         name: "ListPage",
         data: () => ({
-            isDashBoard: false
-        }),
+            isDashBoard: false,
+            }),
         components: {
             navbar, BarChart
         },
         methods: {
-            ...mapActions('receipt', ['getReceipts']),
+            ...mapActions('receipt', ['getReceipts', 'getLastCost']),
         },
         computed: {
             ...mapGetters('receipt', ['receipts'])

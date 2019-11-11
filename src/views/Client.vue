@@ -2,167 +2,221 @@
     <div class="container--fluid">
         <NavBar/>
         <v-content>
-            <v-card
-                    v-if="isDashBoard"
-                    class="rounded-card"
-            >
-                <v-row>
-                    <v-card-title>เพิ่มกิจกรรม</v-card-title>
-                </v-row>
-                <v-form
-                        class="pt-1"
-                        @submit.prevent="clickToCreateReceipt"
-                >
-                    <v-row class="pa-0">
-                        <v-col xs6 md3 cols="12">
-                            <v-text-field
-                                    placeholder="ชื่อกิจกรรม"
-                                    v-model="newActivity"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col xs6 md3 cols="12">
-                            <v-btn
-                                    class="rounded-card"
-                                    color="primary"
-                                    block
-                                    @click="clickToCreateActivity"
-                            >สร้างกิจกรรม
-                            </v-btn>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-divider></v-divider>
-                    </v-row>
-                    <v-row>
-                        <v-card-title>เพิ่มใบเสร็จ</v-card-title>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <v-select
-                                    @change="selectActivity"
-                                    :items="this.activities"
-                                    item-value="id"
-                                    item-text="activity"
-                                    placeholder="รายชื่อกิจกรรมที่มีอยู่"
-                            ></v-select>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <v-menu
-                                    ref="menu"
-                                    v-model="menu"
-                                    :close-on-content-click="false"
-                                    :return-value.sync="date"
-                                    transition="scale-transition"
-                                    offset-y
-                                    min-width="290px"
-                            >
-                                <template v-slot:activator="{ on }">
-                                    <v-text-field
-                                            v-model="date"
-                                            label="เลิอกเดิอนที่ต้องการขอเบิก"
-                                            readonly
-                                            v-on="on"
-                                    ></v-text-field>
-                                </template>
-                                <v-date-picker
-                                        v-model="date"
-                                        type="month"
-                                        no-title
-                                        scrollable>
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                            text
-                                            color="primary"
-                                            @click="menu = false"
-                                    >Cancel
-                                    </v-btn>
-                                    <v-btn
-                                            text
-                                            color="primary"
-                                            @click="$refs.menu.save(date)"
-                                    >OK
-                                    </v-btn>
-                                </v-date-picker>
-                            </v-menu>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <v-text-field
-                                    placeholder="จำนวนเงินทั้งหมด"
-                                    v-model="cost"
-                            ></v-text-field>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <input
-                                    type="file"
-                                    ref="files"
-                                    multiple
-                                    @change="selectFile"
-                                    accept="image/*"
-                            />
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <div>
-                                <div v-for="(file, index) in files"
-                                     :key="index">
-                                    <v-layout>
-                                        <v-flex xs10>
-                                            <div v-text="file.name"></div>
-                                        </v-flex>
-                                        <v-flex xs2>
-                                            <v-btn
-                                                    icon
-                                                    @click="files.splice(index, 1)">
-                                                <v-icon
-                                                >mdi-close
-                                                </v-icon>
-                                            </v-btn>
-                                        </v-flex>
-                                    </v-layout>
-                                </div>
-                            </div>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <v-text-field
-                                    placeholder="หมายเหตุ"
-                                    v-model="remark"
-                            ></v-text-field>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col class="pb-0">
-                            <v-btn
-                                    class="rounded-card"
-                                    block
-                                    color="primary"
-                                    type="submit"
-                            >เพิ่ม
-                            </v-btn>
-                        </v-col>
-                    </v-row>
-                </v-form>
-            </v-card>
             <div
-                    class="d-flex column col justify-center align-center"
+                    v-if="isDashBoard"
+                    class="newInvoice"
+            >
+                <v-row justify="center">
+                    <v-col cols="12">
+                        <v-card
+                                tile
+                        >
+                            <v-form
+                                    class="pt-1"
+                                    @submit.prevent="clickToCreateReceipt"
+                            >
+                                <v-row>
+                                    <v-col>
+                                        <v-card-title>เพิ่มใบเสร็จ</v-card-title>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col
+                                            cols="10"
+                                            sm="6"
+                                    >
+                                        <v-overflow-btn
+                                                class="my-2"
+                                                @change="selectActivity"
+                                                :items="this.activities"
+                                                item-value="id"
+                                                item-text="activity"
+                                                label="กิจกรรมที่มีอยู่"
+                                                editable
+                                                dense
+                                        ></v-overflow-btn>
+                                    </v-col>
+                                    <v-col
+                                            style="padding-top: 24px"
+                                            cols="2"
+                                            sm="6"
+                                    >
+                                        <v-dialog v-model="dialog" max-width="500px">
+                                            <template v-slot:activator="{ on }">
+                                                <v-btn
+                                                        icon
+                                                        class="mx-auto"
+                                                        color="primary"
+                                                        dark
+                                                        v-on="on"
+                                                >
+                                                    <v-icon>mdi-plus</v-icon>
+                                                </v-btn>
+                                            </template>
+                                            <v-card>
+                                                <v-card-title>
+                                                    <span class="headline">เพิ่มกิจกรรม</span>
+                                                </v-card-title>
+
+                                                <v-card-text>
+                                                    <v-container>
+                                                        <v-row>
+                                                            <v-col cols="12" sm="12" md="12">
+                                                                <v-text-field
+                                                                        dense
+                                                                        placeholder="ชื่อกิจกรรม"
+                                                                        v-model="newActivity"
+                                                                ></v-text-field>
+                                                            </v-col>
+                                                        </v-row>
+                                                    </v-container>
+                                                </v-card-text>
+
+                                                <v-card-actions>
+                                                    <v-spacer></v-spacer>
+                                                    <v-btn color="blue darken-1" text @click="dialog = false"
+                                                    >Cancel
+                                                    </v-btn>
+                                                    <v-btn color="blue darken-1" text @click="clickToCreateActivity"
+                                                    >
+                                                        Save
+                                                    </v-btn>
+                                                </v-card-actions>
+                                            </v-card>
+                                        </v-dialog>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col>
+                                        <v-menu
+                                                ref="menu"
+                                                v-model="menu"
+                                                :close-on-content-click="false"
+                                                :return-value.sync="date"
+                                                transition="scale-transition"
+                                                offset-y
+                                                min-width="290px"
+                                        >
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field
+                                                        dense
+                                                        v-model="date"
+                                                        label="เลิอกเดิอนที่ต้องการขอเบิกเงิน"
+                                                        readonly
+                                                        v-on="on"
+                                                ></v-text-field>
+                                            </template>
+                                            <v-date-picker
+                                                    v-model="date"
+                                                    type="month"
+                                                    no-title
+                                                    scrollable
+                                            >
+                                                <v-spacer></v-spacer>
+                                                <v-btn
+                                                        text
+                                                        color="primary"
+                                                        @click="menu = false"
+                                                >Cancel
+                                                </v-btn>
+                                                <v-btn
+                                                        text
+                                                        color="primary"
+                                                        @click="$refs.menu.save(date)"
+                                                >OK
+                                                </v-btn>
+                                            </v-date-picker>
+                                        </v-menu>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col>
+                                        <v-text-field
+                                                dense
+                                                placeholder="จำนวนเงินทั้งหมด"
+                                                v-model="cost"
+                                        ></v-text-field>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col>
+                                        <input
+                                                type="file"
+                                                ref="files"
+                                                multiple
+                                                @change="selectFile"
+                                                accept="image/*"
+                                        />
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col>
+                                        <div>
+                                            <div v-for="(file, index) in files"
+                                                 :key="index">
+                                                <v-layout>
+                                                    <v-flex xs10>
+                                                        <div v-text="file.name"></div>
+                                                    </v-flex>
+                                                    <v-flex xs2>
+                                                        <v-btn
+                                                                icon
+                                                                @click="files.splice(index, 1)">
+                                                            <v-icon
+                                                            >mdi-close
+                                                            </v-icon>
+                                                        </v-btn>
+                                                    </v-flex>
+                                                </v-layout>
+                                            </div>
+                                        </div>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col>
+                                        <v-text-field
+                                                dense
+                                                placeholder="หมายเหตุ"
+                                                v-model="remark"
+                                        ></v-text-field>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col class="pb-0">
+                                        <v-btn
+                                                class="rounded-card"
+                                                block
+                                                color="primary"
+                                                type="submit"
+                                        >เพิ่ม
+                                        </v-btn>
+                                    </v-col>
+                                </v-row>
+                            </v-form>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </div>
+            <div
+                    class="Log"
                     v-else
             >
-                <v-spacer></v-spacer>
-                <v-data-table dense :headers="headers" :items="receipt" item-key="id"
-                              class="elevation-1"></v-data-table>
+                <v-row>
+                    <v-col>
+                        <v-data-table
+                                dense :headers="headers"
+                                :items="receipt"
+                                item-key="id"
+                                class="elevation-1"
+                        ></v-data-table>
+                    </v-col>
+                </v-row>
             </div>
         </v-content>
         <v-footer
                 padless
-                app>
+                app
+        >
             <v-toolbar color="#EE6262">
                 <div class="d-flex row justify-space-around">
                     <v-btn
@@ -170,14 +224,14 @@
                             v-ripple
                             color="white"
                             @click="isDashBoard = false"
-                    >DashBoard
+                    >Log History
                     </v-btn>
                     <v-btn
                             text
                             v-ripple
                             color="white"
                             @click="isDashBoard = true"
-                    >NewInvoice
+                    >New Invoice
                     </v-btn>
                 </div>
             </v-toolbar>
@@ -217,6 +271,7 @@
                 {text: 'เดือนที่ขอเบิก', value: 'date'},
                 {text: 'สถานะ', value: 'name'},
             ],
+            dialog: false,
         }),
         methods: {
             ...mapActions('receipt', ['createActivity', 'sendReceipt', 'getUserActivities', 'getReceipt']),

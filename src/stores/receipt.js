@@ -47,11 +47,11 @@ const actions = {
                 router.replace('/receipt')
             }).catch(err => console.log(err));
     },
-    getActivities: function ({commit}) {
-        axios.get('http://localhost:8000/api/activity/getAll')
+    getLastCost: function ({commit}) {
+        axios.get('http://localhost:8000/api/receipt/getAll')
             .then(res => {
-                let activities = res.data.data;
-                commit('setActivities', activities);
+                let lastCost = res.data.data;
+                commit('setReceipt', lastCost);
             }).catch(err => console.log(err));
     },
     getReceipt: function ({commit}, payload) {
@@ -88,7 +88,7 @@ const actions = {
                 let activityDetails = res.data.data;
             }).catch(err => console.log(err));
 
-    }
+    },
 };
 
 const getters = {
