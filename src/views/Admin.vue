@@ -10,18 +10,13 @@
                         :src="image.file_name"
                 ></v-carousel-item>
             </v-carousel>
-            <v-card-text>
-                {{receiptDetails.date}},
-                {{receiptDetails.id}},
-                {{receiptDetails.cost}},
-                {{receiptDetails.remark}}
-            </v-card-text>
             <pre>{{receiptDetails}}</pre>
             <v-container>
                 <v-row>
-                    <v-text-field label="สำหรับกรอกเพื่อตรวจสอบยอดเงินในรูปว่าตรงกับยอดที่พนักงานกรอกไหม"></v-text-field>
-                    <v-btn>อนุมัติ</v-btn>
-                    <v-btn>ไม่อนุมัติ</v-btn>
+                    <v-text-field
+                            label="สำหรับกรอกเพื่อตรวจสอบยอดเงินในรูปว่าตรงกับยอดที่พนักงานกรอกไหม"></v-text-field>
+                    <v-btn @click="clickToUpdateReceiptStatus(9)">อนุมัติ</v-btn>
+                    <v-btn @click="clickToUpdateReceiptStatus(10)">ไม่อนุมัติ</v-btn>
                     <v-btn>ตรวจสอบยอดเงิน</v-btn>
                 </v-row>
             </v-container>
@@ -39,12 +34,21 @@
             navbar,
         },
         methods: {
-            ...mapActions('receipt', ['getImages'])
+            ...mapActions('receipt', ['getImages', 'updateReceipt']),
+            clickToUpdateReceiptStatus: function (status_id) {
+                 this.updateReceipt({
+                    receipt_id: this.receiptDetails.id,
+                    updates: {
+                        accountant_id: this.$store.state.user.user.id,
+                        status_id: status_id
+                    }
+                });
+            }
         },
         computed: {
             receiptDetails: function () {
-                if (this.$store.state.receipt.receipts[this.$route.params.receipt_id-1]) {
-                    return this.$store.state.receipt.receipts[this.$route.params.receipt_id-1]
+                if (this.$store.state.receipt.receipts[this.$route.params.receipt_id]) {
+                    return this.$store.state.receipt.receipts[this.$route.params.receipt_id]
                 }
                 return {}
             },
@@ -52,8 +56,6 @@
         },
         mounted() {
             this.getImages({receipt_id: this.$route.params.receipt_id});
-            console.log(this.$route.params.receipt_id);
-            console.log(this.$store.state.receipt.receipts[this.$route.params.receipt_id-1]);
         },
     }
 

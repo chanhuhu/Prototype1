@@ -1,6 +1,6 @@
-import Vue from 'vue';
+import axios from 'axios'
 import router from '../router';
-import _ from 'lodash';
+
 
 const state = {
     user: {},
@@ -134,7 +134,7 @@ const actions = {
     },
     getRole: function ({commit}) {
         axios.get('http://localhost:8000/api/role/getAll')
-            .then(res => { 
+            .then(res => {
                 let roles = res.data.data;
                 commit('setRoles', roles);
             }).catch(err => {

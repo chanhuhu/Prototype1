@@ -5,13 +5,15 @@
             <v-card-title>รายชื่อกิจกรรม</v-card-title>
             <v-list-item
                     v-for="receipt in receipts"
-                    :key="receipt.id"
                     style="cursor: pointer;"
                     v-ripple
-                    :to="'/receipt/'+ receipt.id"
+                    :to="'/receipt/'+receipt.id"
+
             >
                 <v-list-item-content>
-                    <v-list-item-title>ชื่อกิจกรรม {{receipt.activity.name}} เดือนที่ขอเบิก {{receipt.date}}</v-list-item-title>
+                    <div class="text-center">
+                        {{receipt.cost}} {{receipt.date}} {{receipt.activity.name}}
+                    </div>
                 </v-list-item-content>
             </v-list-item>
         </v-card>
@@ -33,8 +35,10 @@
             ...mapGetters('receipt', ['receipts'])
         },
         mounted() {
-            this.getReceipts();
         },
+        created() {
+            this.getReceipts();
+        }
     }
 </script>
 

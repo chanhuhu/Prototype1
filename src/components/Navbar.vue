@@ -1,6 +1,6 @@
 <template>
     <nav>
-        <v-app-bar color="#EE6262">
+        <v-app-bar app color="#EE6262">
             <v-btn
                     v-if="$route.fullPath.includes('/receipt/')"
                     @click="$router.go(-1)"

@@ -1,7 +1,7 @@
 <template>
-    <div class="container--fluid" style="background-color: #4F3F3F;">
+    <div class="container--fluid">
         <NavBar/>
-        <v-content>
+        <v-content style="background-color: #4F3F3F;">
             <v-card
                     v-if="isDashBoard"
                     class="rounded-card"
@@ -11,7 +11,7 @@
                         @submit.prevent="clickToCreateReceipt"
                 >
                     <v-card-title>เพิ่มใบเสร็จ</v-card-title>
-                    <v-row>
+                    <v-row class="pa-0">
                         <v-col xs6 md3 cols="12">
                             <v-text-field
                                     placeholder="ชื่อกิจกรรม"
@@ -144,7 +144,10 @@
                 </v-form>
             </v-card>
         </v-content>
-        <div class="justify-end">
+        <v-footer
+                app
+                padless
+                fixed>
             <v-toolbar color="#EE6262">
                 <div class="d-flex row justify-space-around">
                     <v-btn
@@ -163,7 +166,7 @@
                     </v-btn>
                 </div>
             </v-toolbar>
-        </div>
+        </v-footer>
     </div>
 </template>
 

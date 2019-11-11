@@ -1,6 +1,10 @@
-import Vue from 'vue';
+import axios from 'axios'
+import Vue from 'vue'
+import _ from 'lodash'
+import router from "../router";
 
 const state = {
+    receipt: {},
     receipts: {},
     activities: {},
     images: {}
@@ -8,7 +12,12 @@ const state = {
 
 const mutations = {
     setReceipts: function (state, payload) {
-        state.receipts = payload;
+        _.forEach(payload, function (res) {
+            Vue.set(state.receipts, res.id, res)
+        });
+    },
+    deleteReceipt: function (state, payload) {
+        Vue.delete(state.receipts, payload.receipt_id);
     },
     setActivities: function (state, payload) {
         state.activities = payload;
@@ -23,6 +32,16 @@ const actions = {
         await axios.post('http://localhost:8000/api/receipt/upload', payload)
             .then(res => {
                 console.log(res.data.data)
+            }).catch(err => console.log(err));
+    },
+    updateReceipt: function ({commit}, payload) {
+        axios.put('http://localhost:8000/api/receipt/' + payload.receipt_id, payload.updates)
+            .then(res => {
+                let receiptDetails = res.data.data;
+                commit('deleteReceipt', {
+                    receipt_id: receiptDetails.id
+                });
+                router.replace('/receipt')
             }).catch(err => console.log(err));
     },
     getActivities: function ({commit}) {
@@ -43,6 +62,7 @@ const actions = {
         axios.get('http://localhost:8000/api/activity/receipt/getAll')
             .then(res => {
                 let receiptAndActivityDetails = res.data.data;
+                console.log(receiptAndActivityDetails)
                 commit('setReceipts', receiptAndActivityDetails);
             }).catch(err => console.log(err));
     },
@@ -80,7 +100,7 @@ const getters = {
         return activitiesFilter;
     },
     receipts: state => {
-        let receiptsFilter = [];
+        let receiptsFilter = {};
         Object.keys(state.receipts).forEach(key => {
             if (key !== state.receipts.id) {
                 receiptsFilter[key] = state.receipts[key];
