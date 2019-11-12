@@ -16,6 +16,7 @@
             <v-row>
                 <v-col>
                     <v-text-field
+                            color="white"
                             type="password"
                             placeholder="yourpassword"
                             label="Password"
@@ -26,6 +27,7 @@
             <v-row>
                 <v-col class="pb-0">
                     <v-btn
+                            tile
                             type="submit"
                             block
                             color="#30E7F2"

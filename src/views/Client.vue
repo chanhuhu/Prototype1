@@ -190,7 +190,7 @@
                                         <v-btn
                                                 tile
                                                 block
-                                                color="primary"
+                                                color="#30E7F2"
                                                 type="submit"
                                         >เพิ่ม
                                         </v-btn>
@@ -311,7 +311,7 @@
                 this.remark = '';
                 this.cost = '';
                 this.files = [];
-                this.isDashBoard = false
+                this.isDashBoard = false;
                 await this.getReceipt({
                     user_id: this.user.id
                 });
