@@ -7,7 +7,8 @@ const state = {
     receipt: {},
     receipts: {},
     activities: {},
-    images: {}
+    images: {},
+    massage: {}
 };
 
 const mutations = {
@@ -17,7 +18,7 @@ const mutations = {
         });
     },
     setReceipt: function (state, payload) {
-      state.receipt = payload;
+        state.receipt = payload;
     },
     deleteReceipt: function (state, payload) {
         Vue.delete(state.receipts, payload.receipt_id);
@@ -28,13 +29,21 @@ const mutations = {
     setImages: function (state, payload) {
         state.images = payload;
     },
+    setMassage: function (state, payload) {
+        state.massage = payload
+    }
 };
 
 const actions = {
     sendReceipt: async function ({commit}, payload) {
         await axios.post('http://localhost:8000/api/receipt/upload', payload)
             .then(res => {
-                console.log(res.data.data)
+                let dialog = res.data.data;
+                if (!res.data.data) {
+                    let dialog = res.data.error;
+                    commit('setMassage', dialog);
+                }
+                commit('setMassage', dialog);
             }).catch(err => console.log(err));
     },
     updateReceipt: function ({commit}, payload) {

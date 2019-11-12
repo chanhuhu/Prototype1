@@ -9,6 +9,7 @@
                 <v-row>
                     <v-col>
                         <v-card
+                                style="height: auto"
                                 tile
                         >
                             <v-card-title class="headline">ใบเสร็จที่รอการตรวจสอบ</v-card-title>
@@ -46,7 +47,7 @@
             </div>
             <div
                     v-else
-                    class="last-cost"
+                    class="last-cost pa-0"
             >
                 <v-row>
                     <v-col>
@@ -66,7 +67,7 @@
                             @click="isInvoice = false"
                             text
                     >
-                        Last cost
+                        Status
                     </v-btn>
                     <v-btn
                             class="white--text"

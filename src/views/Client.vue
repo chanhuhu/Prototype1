@@ -26,6 +26,7 @@
                                             sm="6"
                                     >
                                         <v-overflow-btn
+                                                v-model="activityName"
                                                 class="my-2"
                                                 @change="selectActivity"
                                                 :items="this.activities"
@@ -141,7 +142,8 @@
                                 <v-row>
                                     <v-col>
                                         <label for="file-upload" class="custom-file-upload">
-                                            <v-icon>mdi-upload</v-icon> Upload
+                                            <v-icon>mdi-upload</v-icon>
+                                            Upload
                                         </label>
                                         <input
                                                 id="file-upload"
@@ -257,6 +259,7 @@
             cost: '',
             files: [],
             newActivity: '',
+            activityName: '',
             date: new Date().toISOString().substr(0, 7),
             menu: false,
             activity_id: '',
@@ -267,12 +270,13 @@
                 {
                     text: 'Invoice#',
                     align: 'left',
-                    sortable: false,
+                    sortable: true,
                     value: 'id',
                 },
                 {text: 'ชื่อกิจกรรม', value: 'activity'},
                 {text: 'จำนวนเงิน', value: 'cost'},
                 {text: 'เดือนที่ขอเบิก', value: 'date'},
+                {text: 'หมายเหตุ', value: 'remark'},
                 {text: 'สถานะ', value: 'name'},
             ],
             dialog: false,
@@ -294,8 +298,9 @@
                 await this.getUserActivities({
                     user_id: this.user.id
                 });
+                this.activityName = '';
                 this.newActivity = '';
-
+                this.dialog = false;
             },
             clickToCreateReceipt: async function () {
                 this.form = new FormData;
