@@ -37,7 +37,7 @@
                                         ></v-overflow-btn>
                                     </v-col>
                                     <v-col
-                                            style="padding-top: 24px"
+                                            style="padding-top: 21px"
                                             cols="2"
                                             sm="6"
                                     >
@@ -46,7 +46,7 @@
                                                 <v-btn
                                                         icon
                                                         class="mx-auto"
-                                                        color="primary"
+                                                        color="error"
                                                         dark
                                                         v-on="on"
                                                 >
@@ -140,7 +140,11 @@
                                 </v-row>
                                 <v-row>
                                     <v-col>
+                                        <label for="file-upload" class="custom-file-upload">
+                                            <v-icon>mdi-upload</v-icon> Upload
+                                        </label>
                                         <input
+                                                id="file-upload"
                                                 type="file"
                                                 ref="files"
                                                 multiple
@@ -184,7 +188,7 @@
                                 <v-row>
                                     <v-col class="pb-0">
                                         <v-btn
-                                                class="rounded-card"
+                                                tile
                                                 block
                                                 color="primary"
                                                 type="submit"
@@ -329,7 +333,14 @@
 </script>
 
 <style scoped>
-    .rounded-card {
-        border-radius: 0;
+    input[type="file"] {
+        display: none;
+    }
+
+    .custom-file-upload {
+        border: 1px solid #ccc;
+        display: inline-block;
+        padding: 6px 12px;
+        cursor: pointer;
     }
 </style>

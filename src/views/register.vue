@@ -1,9 +1,9 @@
 <template>
     <div class="container--fluid">
-        <navbar />
+        <navbar/>
         <v-container class="bg">
             <div>
-                <v-card class="ma-5 mb-2 pa-5" xs12 md12>
+                <v-card class="ma-5 mb-2 pa-5">
                     <div class="text--left font-weight-black">
                     <span>
                         ลงทะเบียน
@@ -37,12 +37,11 @@
                     </v-row>
                     <v-row>
                         <v-col>
-                            <v-btn color="#30E7F2" type="submit" block>Go</v-btn>
+                            <v-btn color="#30E7F2" type="submit" block>เพิ่มสมัครชิก</v-btn>
                         </v-col>
                     </v-row>
                 </v-card>
             </div>
-
         </v-container>
     </div>
 </template>
@@ -61,6 +60,7 @@
     } from 'vuex';
 
     import navbar from "../components/Navbar";
+
     export default {
         data: () => ({
             form: {
