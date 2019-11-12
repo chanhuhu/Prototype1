@@ -2,37 +2,58 @@
     <div class="container--fluid">
         <navbar/>
         <v-content>
-            <v-card tile>
-                <v-card-title class="headline">ใบเสร็จที่รอการตรวจสอบ</v-card-title>
-                <v-list two-line>
-                    <v-list-item-group
-                            active-class="pink--text"
-                    >
-                        <template v-for="receipt in receipts">
-                            <v-list-item :key="receipt.id" :to="'/receipt/'+receipt.id">
-                                <template v-slot:default="{ active, toggle }">
-                                    <v-list-item-content>
-                                        <v-row>
-                                            <v-col>
-                                                <v-list-item-title
-                                                        v-text="receipt.activity.activity"
-                                                ></v-list-item-title>
-                                            </v-col>
-                                            <v-col>
-                                                <v-list-item-subtitle
-                                                        v-text="receipt.date"
-                                                ></v-list-item-subtitle>
-                                            </v-col>
-                                        </v-row>
-                                        <v-list-item-subtitle
-                                                v-text="receipt.created_at"></v-list-item-subtitle>
-                                    </v-list-item-content>
-                                </template>
-                            </v-list-item>
-                        </template>
-                    </v-list-item-group>
-                </v-list>
-            </v-card>
+            <div
+                    v-if="isInvoice"
+                    class="invoice-list"
+            >
+                <v-row>
+                    <v-col>
+                        <v-card
+                                tile
+                        >
+                            <v-card-title class="headline">ใบเสร็จที่รอการตรวจสอบ</v-card-title>
+                            <v-list two-line>
+                                <v-list-item-group
+                                        active-class="pink--text"
+                                >
+                                    <template v-for="receipt in receipts">
+                                        <v-list-item :key="receipt.id" :to="'/receipt/'+receipt.id">
+                                            <template v-slot:default="{ active, toggle }">
+                                                <v-list-item-content>
+                                                    <v-row>
+                                                        <v-col>
+                                                            <v-list-item-title
+                                                                    v-text="receipt.activity.activity"
+                                                            ></v-list-item-title>
+                                                        </v-col>
+                                                        <v-col>
+                                                            <v-list-item-subtitle
+                                                                    v-text="receipt.date"
+                                                            ></v-list-item-subtitle>
+                                                        </v-col>
+                                                    </v-row>
+                                                    <v-list-item-subtitle
+                                                            v-text="receipt.created_at"></v-list-item-subtitle>
+                                                </v-list-item-content>
+                                            </template>
+                                        </v-list-item>
+                                    </template>
+                                </v-list-item-group>
+                            </v-list>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </div>
+            <div
+                    v-else
+                    class="last-cost"
+            >
+                <v-row>
+                    <v-col>
+                        <BarChart/>
+                    </v-col>
+                </v-row>
+            </div>
         </v-content>
         <v-footer
                 absolute
@@ -40,7 +61,25 @@
         >
             <v-toolbar color="#EE6262">
                 <div class="d-flex row justify-space-around">
-                    <v-btn to="/register" text color="white">
+                    <v-btn
+                            class="white--text"
+                            @click="isInvoice = false"
+                            text
+                    >
+                        Last cost
+                    </v-btn>
+                    <v-btn
+                            class="white--text"
+                            @click="isInvoice = true"
+                            text
+                    >
+                        Invoice
+                    </v-btn>
+                    <v-btn
+                            class="white--text"
+                            to="/register"
+                            text
+                    >
                         Sign Up
                     </v-btn>
                 </div>
@@ -57,8 +96,8 @@
     export default {
         name: "ListPage",
         data: () => ({
-            isDashBoard: false,
-            }),
+            isInvoice: true,
+        }),
         components: {
             navbar, BarChart
         },
@@ -77,7 +116,5 @@
 </script>
 
 <style scoped>
-    .btn {
-        font-family: Arial, sans-serif;
-    }
+
 </style>
