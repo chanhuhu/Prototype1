@@ -20,12 +20,40 @@
             <v-card-text>
                 <v-row>
                     <v-col>
-                        <div class="display-1 font-weight-thin text-center white--text">ยอดใช้ยอดเบิกในแต่ละเดือน</div>
+                        <div class="display-1 font-weight-thin text-center white--text">ยอดเที่ให้เบิกในแต่ละเดือน</div>
                     </v-col>
                 </v-row>
                 <v-row>
                     <v-col>
                         <div class="headline text-center white--text">รวม: {{yearlyCost}} บาท</div>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col
+                            cols="12"
+                            sm="6"
+                    >
+                        <div class="subtitle-1 white--text">จำนวนใบเสร็จทั้งหมด: {{allInvoice}}</div>
+                    </v-col>
+                    <v-col
+                            cols="12"
+                            sm="6"
+                    >
+                        <div class="subtitle-1 white--text">จำนวนใบเสร็จทั้งหมดที่กำลังรอการตรวจสอบ: {{waitingInvoice}}</div>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col
+                            cols="12"
+                            sm="6"
+                    >
+                        <div class="subtitle-1 white--text">จำนวนใบเสร็จทั้งหมดที่ถูกการอนุมัติ: {{approved}}</div>
+                    </v-col>
+                    <v-col
+                            cols="12"
+                            sm="6"
+                    >
+                        <div class="subtitle-1 white--text">จำนวนใบเสร็จทั้งหมดที่ถูกการปฎิเสธ: {{rejected}}</div>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -35,6 +63,7 @@
 
 <script>
     import {mapActions} from 'vuex';
+    import axios from 'axios';
 
     export default {
         data: () => ({
@@ -52,12 +81,31 @@
                 'Nov',
                 'Dec'
             ],
+            approved: '',
+            rejected: '',
+            allInvoice: '',
+            waitingInvoice: ''
         }),
         methods: {
             ...mapActions('receipt', ['getLastCost']),
+            getReceiptCount: function () {
+                try {
+                    axios.get('http://localhost:8000/api/receipt/getAll/count')
+                        .then(res => {
+                            let counts = res.data.data;
+                            this.approved = counts.approved;
+                            this.rejected = counts.rejected;
+                            this.allInvoice = counts.allInvoice;
+                            this.waitingInvoice = counts.waiting
+                        });
+                } catch (err) {
+                    console.log(err)
+                }
+            },
         },
         mounted() {
             this.getLastCost();
+            this.getReceiptCount();
         },
         computed: {
             costs: function () {
