@@ -82,17 +82,16 @@ const actions = {
         await axios.post('http://localhost:8000/api/user/register', payload)
             .then(res => {
                 const userDetails = res.data.data;
-                commit('addUser', userDetails);
+                console.log(userDetails);
             }).catch(err => {
-            console.log(err);
-        })
+                console.log(err);
+            })
     },
     updateUser: function ({commit}, payload) {
         axios.put('http://localhost:8000/api/user/' + payload.user_id, payload.updates)
             .then(res => {
                 let userDetails = res.data.data;
-                // console.log(userDetails);
-                // commit('updateUser', userDetails);
+                console.log(userDetails)
             }).catch(err => {
             console.log(err);
         });
@@ -138,8 +137,8 @@ const actions = {
                 let roles = res.data.data;
                 commit('setRoles', roles);
             }).catch(err => {
-                console.log(err)
-            });
+            console.log(err)
+        });
     }
 };
 

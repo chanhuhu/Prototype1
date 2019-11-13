@@ -20,7 +20,7 @@
             <v-card-text>
                 <v-row>
                     <v-col>
-                        <div class="display-1 font-weight-thin text-center white--text">ยอดเที่ให้เบิกในแต่ละเดือน</div>
+                        <div class="display-1 font-weight-thin text-center white--text">ยอดของจำนวนเงินที่มีการเบิกจ่ายให้ในแต่ละเดือน</div>
                     </v-col>
                 </v-row>
                 <v-row>

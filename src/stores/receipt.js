@@ -37,13 +37,13 @@ const mutations = {
 const actions = {
     sendReceipt: async function ({commit}, payload) {
         await axios.post('http://localhost:8000/api/receipt/upload', payload)
-            .then(res => {
+            .then(async res => {
                 let dialog = res.data.data;
                 if (!res.data.data) {
                     let dialog = res.data.error;
-                    commit('setMassage', dialog);
+                    await commit('setMassage', dialog);
                 }
-                commit('setMassage', dialog);
+                await commit('setMassage', dialog);
             }).catch(err => console.log(err));
     },
     updateReceipt: function ({commit}, payload) {
@@ -70,7 +70,7 @@ const actions = {
                 commit('setReceipt', receiptDetails);
             }).catch(err => console.log(err));
     },
-    getReceipts: function ({commit}, payload) {
+    getReceipts: function ({commit}) {
         axios.get('http://localhost:8000/api/activity/receipt/getAll')
             .then(res => {
                 let receiptActivityDetails = res.data.data;
@@ -95,6 +95,7 @@ const actions = {
         await axios.post('http://localhost:8000/api/activity/create', payload)
             .then(async (res) => {
                 let activityDetails = res.data.data;
+                console.log(activityDetails)
             }).catch(err => console.log(err));
 
     },
